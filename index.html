@@ -1,3 +1,30 @@
+<!-- 
+✅ Projekto būsena: 2025-10-06
+
+🔧 Kas jau veikia:
+- Barkodo nuskaitymas naudojant ZXing biblioteką (BrowserBarcodeReader)
+- Skaičių nuskaitymas naudojant Tesseract.js su papildomu filtravimu (tik skaičiai)
+- Vartotojo sąsaja su įkėlimo laukeliais ir rezultatų blokais
+
+⚠️ Kas neveikia arba ribota:
+- Tesseract.js netiksliai atpažįsta skaičius iš LED ekranų (pvz., svarstyklių ekranas)
+- `tessedit_char_whitelist` ir `psm` parametrai ne visada veikia per CDN versiją
+- Vaizdai su fonu, atspindžiais ar nestandartiniu šriftu gali būti neteisingai interpretuoti
+
+📌 Siūlomi tolesni žingsniai:
+1. Integruoti OpenCV.js filtravimą (kontrasto didinimas, binarizacija) prieš OCR
+2. Išbandyti Nanonets OCR API – AI pagrįstas, tikslesnis su skaičiais
+3. Pridėti rezultatų saugojimą (pvz., į Google Sheets ar CSV)
+4. Pridėti QR kodų palaikymą (ZXing palaiko QR, reikia tik UI papildymo)
+5. Sukurti mobiliai draugišką versiją (responsive dizainas)
+
+🧠 Patarimas sau:
+- Jei rezultatai vėl bus netikslūs, pirmiausia patikrink paveikslėlio kokybę ir naršyklės „Console“ klaidas (F12)
+- Jei reikia testuoti naują OCR, naudok aiškų, didelio kontrasto paveikslėlį su standartiniu šriftu
+
+📂 Failas: index.html
+📍 GitHub Pages: https://galuotas.github.io/service/
+-->
 <!DOCTYPE html>
 <html lang="lt">
 <head>
@@ -82,3 +109,4 @@
   </script>
 </body>
 </html>
+
