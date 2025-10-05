@@ -1,31 +1,15 @@
-<!-- 
-✅ Kodo komentarai: kas buvo pataisyta ir kodėl
-
-1. Įkeltos bibliotekos ZXing ir Tesseract.js, bet pradiniame kode nebuvo jokio HTML turinio ar JavaScript logikos – todėl niekas nevyko.
-2. Pridėta vartotojo sąsaja: įkėlimo laukeliai, mygtukai ir rezultatų blokai.
-3. Pridėta JavaScript logika, kuri:
-   - Saugo paveikslėlio URL po įkėlimo
-   - Paleidžia barkodo arba teksto nuskaitymą tik paspaudus mygtuką
-4. Pakeistas ZXing CDN adresas į stabilesnį (unpkg vietoj jsDelivr), nes kai kuriose naršyklėse buvo problemų su `@zxing/browser@latest`.
-5. Patikrinta, kad viskas veikia GitHub Pages aplinkoje – failas `index.html` turi būti šakniniame kataloge (`/root`), o JavaScript turi būti įkeltas per `<script>` žymą.
-
-🛠 Jei neveiks ateityje:
-- Patikrink, ar bibliotekos vis dar pasiekiamos (CDN nuorodos).
-- Patikrink, ar failų pavadinimai nesikeitė.
-- Naudok naršyklės „Console“ (F12) klaidų diagnostikai.
-
--->
 <!DOCTYPE html>
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Barkodo ir teksto nuskaitymas</title>
+  <title>Barkodo ir skaičių nuskaitymas</title>
   <script src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
     input, button { margin: 10px 0; display: block; }
     .result { margin-top: 10px; padding: 10px; background: #f0f0f0; }
+    hr { margin: 30px 0; }
   </style>
 </head>
 <body>
@@ -36,12 +20,23 @@
 
   <hr>
 
-  <h2>🔢 Teksto/skaičių nuskaitymas</h2>
-  <input type="file" id="textInput" accept="image/*" />
-  <button onclick="scanText()">Nuskaityti tekstą</button>
-  <div class="result" id="textResult">Čia bus teksto rezultatas</div>
+  <h2>🔢 Skaičių nuskaitymas</h2>
+  <input type="file" id="numberInput" accept="image/*" />
+  <button onclick="scanNumbers()">Nuskaityti skaičius</button>
+  <div class="result" id="numberResult">Čia bus nuskaityti skaičiai</div>
+
+  <!-- 
+  ✅ Kodo komentarai: kas buvo padaryta
+  - Įkeltos bibliotekos ZXing (barkodams) ir Tesseract.js (tekstui/skaičiams)
+  - Pridėta vartotojo sąsaja su įkėlimo laukeliais ir mygtukais
+  - Barkodų nuskaitymui naudojamas ZXing su decodeFromImageUrl
+  - Skaičių nuskaitymui naudojamas Tesseract su whitelist '0123456789' ir PSM režimu 7
+  - Rezultatai rodomi tik paspaudus mygtuką
+  - Jei neveiks ateityje: patikrink CDN nuorodas, naršyklės klaidas (F12 → Console), failų pavadinimus
+  -->
 
   <script>
+    // Barkodo nuskaitymas
     let barcodeImageUrl = null;
     document.getElementById('barcodeInput').addEventListener('change', (e) => {
       barcodeImageUrl = URL.createObjectURL(e.target.files[0]);
@@ -61,26 +56,29 @@
       });
     }
 
-    let textImageUrl = null;
-    document.getElementById('textInput').addEventListener('change', (e) => {
-      textImageUrl = URL.createObjectURL(e.target.files[0]);
+    // Skaičių nuskaitymas
+    let numberImageUrl = null;
+    document.getElementById('numberInput').addEventListener('change', (e) => {
+      numberImageUrl = URL.createObjectURL(e.target.files[0]);
     });
 
-    function scanText() {
-      if (!textImageUrl) {
-        alert('Įkelkite paveikslėlį su tekstu.');
+    function scanNumbers() {
+      if (!numberImageUrl) {
+        alert('Įkelkite paveikslėlį su skaičiais.');
         return;
       }
-      Tesseract.recognize(textImageUrl, 'eng', {
-        logger: m => console.log(m)
+
+      Tesseract.recognize(numberImageUrl, 'eng', {
+        logger: m => console.log(m),
+        tessedit_char_whitelist: '0123456789',
+        tessedit_pageseg_mode: 7
       }).then(result => {
-        document.getElementById('textResult').innerText = 'Tekstas: ' + result.data.text;
+        document.getElementById('numberResult').innerText = 'Skaičiai: ' + result.data.text.trim();
       }).catch(err => {
-        document.getElementById('textResult').innerText = 'Nepavyko nuskaityti teksto.';
+        document.getElementById('numberResult').innerText = 'Nepavyko nuskaityti skaičių.';
         console.error(err);
       });
     }
   </script>
 </body>
 </html>
-
