@@ -25,7 +25,6 @@
   <div class="result" id="textResult">Čia bus teksto rezultatas</div>
 
   <script>
-    // Barkodo nuskaitymas
     const barcodeReader = new ZXing.BrowserBarcodeReader();
     let barcodeImageUrl = null;
 
@@ -47,7 +46,6 @@
       }
     });
 
-    // Teksto nuskaitymas
     let textImageUrl = null;
 
     document.getElementById('textInput').addEventListener('change', (e) => {
