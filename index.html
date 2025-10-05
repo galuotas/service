@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Barkodo ir teksto nuskaitymas</title>
-  <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@latest"></script>
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
@@ -14,55 +14,55 @@
 <body>
   <h2>📷 Barkodo nuskaitymas</h2>
   <input type="file" id="barcodeInput" accept="image/*" />
-  <button id="scanBarcodeBtn">Nuskaityti barkodą</button>
+  <button onclick="scanBarcode()">Nuskaityti barkodą</button>
   <div class="result" id="barcodeResult">Čia bus barkodo rezultatas</div>
 
   <hr>
 
   <h2>🔢 Teksto/skaičių nuskaitymas</h2>
   <input type="file" id="textInput" accept="image/*" />
-  <button id="scanTextBtn">Nuskaityti tekstą</button>
+  <button onclick="scanText()">Nuskaityti tekstą</button>
   <div class="result" id="textResult">Čia bus teksto rezultatas</div>
 
   <script>
-    const barcodeReader = new ZXing.BrowserBarcodeReader();
     let barcodeImageUrl = null;
-
     document.getElementById('barcodeInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      barcodeImageUrl = URL.createObjectURL(file);
+      barcodeImageUrl = URL.createObjectURL(e.target.files[0]);
     });
 
-    document.getElementById('scanBarcodeBtn').addEventListener('click', async () => {
+    function scanBarcode() {
       if (!barcodeImageUrl) {
         alert('Įkelkite paveikslėlį su barkodu.');
         return;
       }
-      try {
-        const result = await barcodeReader.decodeFromImageUrl(barcodeImageUrl);
+      const codeReader = new ZXing.BrowserBarcodeReader();
+      codeReader.decodeFromImageUrl(barcodeImageUrl).then(result => {
         document.getElementById('barcodeResult').innerText = 'Barkodas: ' + result.text;
-      } catch (err) {
+      }).catch(err => {
         document.getElementById('barcodeResult').innerText = 'Nepavyko nuskaityti barkodo.';
-      }
-    });
+        console.error(err);
+      });
+    }
 
     let textImageUrl = null;
-
     document.getElementById('textInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      textImageUrl = URL.createObjectURL(file);
+      textImageUrl = URL.createObjectURL(e.target.files[0]);
     });
 
-    document.getElementById('scanTextBtn').addEventListener('click', async () => {
+    function scanText() {
       if (!textImageUrl) {
         alert('Įkelkite paveikslėlį su tekstu.');
         return;
       }
-      const result = await Tesseract.recognize(textImageUrl, 'eng', {
+      Tesseract.recognize(textImageUrl, 'eng', {
         logger: m => console.log(m)
+      }).then(result => {
+        document.getElementById('textResult').innerText = 'Tekstas: ' + result.data.text;
+      }).catch(err => {
+        document.getElementById('textResult').innerText = 'Nepavyko nuskaityti teksto.';
+        console.error(err);
       });
-      document.getElementById('textResult').innerText = 'Tekstas: ' + result.data.text;
-    });
+    }
   </script>
 </body>
 </html>
