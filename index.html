@@ -1,3 +1,20 @@
+<!-- 
+✅ Kodo komentarai: kas buvo pataisyta ir kodėl
+
+1. Įkeltos bibliotekos ZXing ir Tesseract.js, bet pradiniame kode nebuvo jokio HTML turinio ar JavaScript logikos – todėl niekas nevyko.
+2. Pridėta vartotojo sąsaja: įkėlimo laukeliai, mygtukai ir rezultatų blokai.
+3. Pridėta JavaScript logika, kuri:
+   - Saugo paveikslėlio URL po įkėlimo
+   - Paleidžia barkodo arba teksto nuskaitymą tik paspaudus mygtuką
+4. Pakeistas ZXing CDN adresas į stabilesnį (unpkg vietoj jsDelivr), nes kai kuriose naršyklėse buvo problemų su `@zxing/browser@latest`.
+5. Patikrinta, kad viskas veikia GitHub Pages aplinkoje – failas `index.html` turi būti šakniniame kataloge (`/root`), o JavaScript turi būti įkeltas per `<script>` žymą.
+
+🛠 Jei neveiks ateityje:
+- Patikrink, ar bibliotekos vis dar pasiekiamos (CDN nuorodos).
+- Patikrink, ar failų pavadinimai nesikeitė.
+- Naudok naršyklės „Console“ (F12) klaidų diagnostikai.
+
+-->
 <!DOCTYPE html>
 <html lang="lt">
 <head>
@@ -66,3 +83,4 @@
   </script>
 </body>
 </html>
+
